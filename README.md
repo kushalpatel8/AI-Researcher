@@ -1,68 +1,57 @@
-# AI-Researcher
-AI-Researcher is an autonomous agentic framework designed to assist researchers in identifying, analyzing, and synthesizing academic literature. Built using LangChain and LangGraph, the agent interacts with the arXiv API to find recent papers, reads their content, and generates new research directions or even full research papers rendered in LaTeX PDF format.
+# AI-Researcher 📄
+AI-Researcher is an autonomous, agentic framework built with LangChain and LangGraph that automates the lifecycle of academic research. The platform allows users to explore specific topics, analyze recent literature from arXiv, and synthesize findings into professional, LaTeX-formatted research papers.
 
-Features
-Automated Literature Search: Queries the arXiv API to find the most recent papers in fields like Physics, Mathematics, Computer Science, and Economics.
+## 🚀 Features
+Autonomous Research Agent: A ReAct-based agent that uses reasoning and acting loops to search, read, and write research autonomously.
 
-Intelligent Paper Analysis: Uses a ReAct agent graph to read and understand the contents of selected research papers.
+Literature Discovery: Real-time integration with the arXiv API to find recently published papers in fields like Physics, Computer Science, and Mathematics.
 
-Research Synthesis: Identifies promising future research directions based on current findings.
+Deep Paper Analysis: Ability to parse XML metadata and read full PDF content to extract key research outcomes and future directions.
 
-LaTeX Generation: Automatically writes new research papers, including mathematical equations, and renders them as professional PDFs.
+AI-Powered Synthesis: Suggests novel research ideas based on identified gaps in existing literature.
 
-Interactive Frontend: Includes a Streamlit-based web interface for real-time interaction with the research agent.
+LaTeX Document Generation: Automatically writes comprehensive papers including mathematical equations and renders them as professional PDFs.
 
-Project Structure
-ai_researcher.py: The core logic for setting up the LangGraph ReAct agent and the initial research prompt.
+Interactive Web Interface: A modern Streamlit dashboard with real-time status updates and tool execution tracking.
 
-arxiv_tool.py: Custom tool for searching and parsing XML data from the arXiv API.
+## 🛠️ Tech Stack
+### Framework: LangChain & LangGraph (Stateful Orchestration)
 
-frontend.py: A Streamlit application providing a chat interface for the agent.
+### Core Model: Gemini 2.5 Flash (gemini-2.5-flash)
 
-read_pdf.py & write_pdf.py: Utility scripts for processing input papers and generating LaTeX-based research outputs.
+### Frontend: Streamlit
 
-pyproject.toml: Project metadata and dependency specifications.
+### Academic Integration: arXiv API
 
-Getting Started
-Prerequisites
-Python >= 3.14
+### Document Handling: PyMuPDF & LaTeX
 
-A Google Gemini API Key (stored in a .env file as GOOGLE_API_KEY)
+### Configuration: Dotenv & UV (Package Management)
 
-Installation
+## 📋 Prerequisites
+Ensure you have the following installed:
+
+Python (v3.14 or higher)
+
+An active Google Gemini API Key
+
+## ⚙️ Getting Started
 Clone the repository:
 
 Bash
-git clone <repository-url>
-cd ai-researcher
+git clone <your-repository-url>
+cd AI-Researcher
 Install dependencies:
-The project uses uv or standard pip. Dependencies include langchain, langchain-google-genai, requests, and streamlit.
 
 Bash
-pip install langchain langchain-community langchain-core langchain-google-genai requests streamlit
-Environment Setup:
-Create a .env file in the root directory:
+pip install langchain langchain-google-genai streamlit requests python-dotenv
+Set up environment variables:
+Create a .env file in the root directory and add your API key:
 
 Code snippet
-GOOGLE_API_KEY=your_actual_api_key_here
-Usage
-Running the Terminal Agent
-To interact with the researcher directly via the command line:
+GOOGLE_API_KEY=your_gemini_api_key_here
+Run the application:
 
-Bash
-python ai_researcher.py
-Running the Web Interface
-To launch the Streamlit dashboard:
+For Terminal: python ai_researcher.py
 
-Bash
-streamlit run frontend.py
-How It Works
-Topic Selection: The user provides a research topic.
+For Web Interface: streamlit run frontend.py
 
-Discovery: The agent searches arXiv for recent relevant publications.
-
-Deep Dive: The agent reads a selected paper to identify gaps and future work.
-
-Proposal: It suggests new research ideas for the user to approve.
-
-Writing: Once an idea is selected, the agent writes a full paper and exports it to PDF.
