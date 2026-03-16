@@ -21,10 +21,10 @@ tool_node = ToolNode(tools)
 
 
 # Step3: Setup LLM
+
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-# Bind the tools only once
 model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", api_key=os.getenv("GOOGLE_API_KEY")).bind_tools(tools)
 
 
