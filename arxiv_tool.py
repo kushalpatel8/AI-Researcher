@@ -79,7 +79,7 @@ def arxiv_search(topic: str) -> list[dict]:
     """Search for recently uploaded arXiv papers
 
     Args:
-        topic: The topic to search for papers about
+        topic: The topic to search for papers about. IMPORTANT: Do not use double quotes (") or parentheses () in your query. Use only simple words separated by spaces.
 
     Returns:
         List of papers with their metadata including title, authors, summary, etc.
