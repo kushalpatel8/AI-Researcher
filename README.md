@@ -20,27 +20,46 @@ Interactive Web Interface: A modern Streamlit dashboard with real-time status up
 sequenceDiagram
     autonumber
     actor User
-    participant Frontend as React Frontend
-    participant Backend as Express Server
-    participant Gemini as Google Gemini AI
-    participant Mongo as MongoDB
-    participant Puppeteer as Puppeteer Engine
+    participant Streamlit as Streamlit UI (main.py)
+    participant Agent as LangGraph Agent (ai_researcher.py)
+    participant Gemini as Google Gemini AI (gemini-2.5-flash)
+    participant Arxiv as arXiv API (arxiv_tool.py)
+    participant PDFReader as PDF Extractor (read_pdf.py)
+    participant PDFEngine as Markdown PDF Engine (write_pdf.py)
 
-    User->>Frontend: Fill job details, self-description & upload PDF resume
-    Frontend->>Backend: POST /api/interview (Multipart Form Data)
-    Backend->>Backend: Extract raw text from PDF resume via pdf-parse
-    Backend->>Gemini: Request interview report JSON (Zod Schema enforced)
-    Gemini-->>Backend: Return match score, questions, skill gaps & prep plan
-    Backend->>Mongo: Save interview report record
-    Backend-->>Frontend: Return report object & navigation ID
-    User->>Frontend: Request tailored resume PDF download
-    Frontend->>Backend: POST /api/interview/resume/pdf/:id
-    Backend->>Gemini: Request tailored ATS HTML resume content
-    Gemini-->>Backend: Return formatted HTML resume string
-    Backend->>Puppeteer: Launch Chrome headless & print A4 PDF
-    Puppeteer-->>Backend: Return binary PDF Buffer
-    Backend-->>Frontend: Stream PDF binary attachment response
-    Frontend-->>User: Trigger browser PDF download
+    User->>Streamlit: Enter research topic / query in chat
+    Streamlit->>Agent: Stream message state to compiled StateGraph (graph.stream)
+    Agent->>Gemini: Invoke model with conversation history & bound tools
+    
+    opt Literature Discovery
+        Gemini-->>Agent: Request tool call: arxiv_search(topic)
+        Agent->>Arxiv: Query arXiv API & parse XML metadata
+        Arxiv-->>Agent: Return paper titles, summaries & PDF URLs
+        Agent->>Gemini: Pass arXiv metadata into context
+        Gemini-->>Streamlit: Present relevant papers & propose research ideas
+        Streamlit-->>User: Display agent response & suggested directions
+        User->>Streamlit: Select paper / confirm research topic
+        Streamlit->>Agent: Pass selection to Agent
+    end
+
+    opt Deep Paper Analysis
+        Gemini-->>Agent: Request tool call: read_pdf(url)
+        Agent->>PDFReader: Fetch arXiv PDF via HTTP & extract text (PyPDF2)
+        PDFReader-->>Agent: Return full extracted text content
+        Agent->>Gemini: Provide paper text for analysis & synthesis
+    end
+
+    opt Paper Synthesis & PDF Generation
+        Gemini->>Gemini: Synthesize findings, formulate novel paper in Markdown
+        Gemini-->>Agent: Request tool call: render_markdown_pdf(markdown_content)
+        Agent->>PDFEngine: Generate PDF with TOC & styling in /output
+        PDFEngine-->>Agent: Return generated PDF file path
+        Agent-->>Streamlit: Update session state with PDF path & notify completion
+    end
+
+    Streamlit-->>User: Display research summary & activate sidebar download button
+    User->>Streamlit: Click "Download Generated Paper (PDF)"
+    Streamlit-->>User: Download generated PDF document
 ```
 
 ## 🛠️ Tech Stack
@@ -82,5 +101,5 @@ Run the application:
 
 For Terminal: python ai_researcher.py
 
-For Web Interface: streamlit run frontend.py
+For Web Interface: streamlit run main.py
 
