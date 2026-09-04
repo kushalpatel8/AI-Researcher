@@ -14,6 +14,35 @@ LaTeX Document Generation: Automatically writes comprehensive papers including m
 
 Interactive Web Interface: A modern Streamlit dashboard with real-time status updates and tool execution tracking.
 
+## 🔄 Application Workflow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Frontend as React Frontend
+    participant Backend as Express Server
+    participant Gemini as Google Gemini AI
+    participant Mongo as MongoDB
+    participant Puppeteer as Puppeteer Engine
+
+    User->>Frontend: Fill job details, self-description & upload PDF resume
+    Frontend->>Backend: POST /api/interview (Multipart Form Data)
+    Backend->>Backend: Extract raw text from PDF resume via pdf-parse
+    Backend->>Gemini: Request interview report JSON (Zod Schema enforced)
+    Gemini-->>Backend: Return match score, questions, skill gaps & prep plan
+    Backend->>Mongo: Save interview report record
+    Backend-->>Frontend: Return report object & navigation ID
+    User->>Frontend: Request tailored resume PDF download
+    Frontend->>Backend: POST /api/interview/resume/pdf/:id
+    Backend->>Gemini: Request tailored ATS HTML resume content
+    Gemini-->>Backend: Return formatted HTML resume string
+    Backend->>Puppeteer: Launch Chrome headless & print A4 PDF
+    Puppeteer-->>Backend: Return binary PDF Buffer
+    Backend-->>Frontend: Stream PDF binary attachment response
+    Frontend-->>User: Trigger browser PDF download
+```
+
 ## 🛠️ Tech Stack
 ### Framework: LangChain & LangGraph (Stateful Orchestration)
 
